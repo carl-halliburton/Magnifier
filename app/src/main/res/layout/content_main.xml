@@ -8,4 +8,10 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
 </android.support.constraint.ConstraintLayout>
