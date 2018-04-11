@@ -23,7 +23,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="86" />
+                                                <entry key="scalingPercent" value="87" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,6 +34,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="fff62a" />
                                       <entry key="foregroundImage" value="C:\Users\carl\Downloads\different_magnifier_vector_elements_524813.jpg" />
                                     </map>
                                   </option>
