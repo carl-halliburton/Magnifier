@@ -8,16 +8,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private CameraManager mCameraManager;
-    private String mCameraId;
     private Boolean isTorchOn;
+    private String mCameraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
+
         isTorchOn = false;
     }
 
@@ -44,9 +45,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_light) {
-            setIsFlashAvailable();
-            toggleFlash();
-            return true;
+            if (setIsFlashAvailable()) {
+                toggleFlash();
+                return true;
+            }
         }
         else if (id == R.id.action_settings) {
             return true;
@@ -58,18 +60,45 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //Manage led flash
-    //---------------------------------------------------------------------------------------------
-    public void setIsFlashAvailable() {
-        Boolean isFlashAvailable = getApplicationContext().getPackageManager()
-            .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(isTorchOn){
+            toggleLightOff();
+        }
+    }
 
-        if (!isFlashAvailable)
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(isTorchOn){
+            toggleLightOff();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isTorchOn){
+            toggleLightOn();
+        }
+    }
+
+    //Manage led flash
+//---------------------------------------------------------------------------------------------
+    public Boolean setIsFlashAvailable() {
+        Boolean isFlashAvailable = getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
+        if (!isFlashAvailable) {
             Toast.makeText(getApplicationContext(), "Flash no available", Toast.LENGTH_LONG).show();
+            return false;
+            }
+            else
+                return true;
     }
 
     public void toggleFlash() {
-        View v = findViewById(android.R.id.content);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             mCameraId = mCameraManager.getCameraIdList()[0];
@@ -79,35 +108,34 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if (isTorchOn) {
-                toggleLightOn(v);
                 isTorchOn = false;
+                Toast.makeText(MainActivity.this, "light off", Toast.LENGTH_SHORT).show();
+                toggleLightOff();
             } else {
-                toggleLightOff(v);
                 isTorchOn = true;
+                Toast.makeText(MainActivity.this, "light on", Toast.LENGTH_SHORT).show();
+                toggleLightOn();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void toggleLightOn(View v) {
+    public void toggleLightOn() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mCameraManager.setTorchMode(mCameraId, true);
-                //mTorchOnOffButton.setImageResource(R.drawable.on);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void toggleLightOff(View v) {
+    public void toggleLightOff() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mCameraManager.setTorchMode(mCameraId, false);
-                //mTorchOnOffButton.setImageResource(R.drawable.off);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

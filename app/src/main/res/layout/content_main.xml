@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_main">
 
     <TextureView
-        android:id="@+id/texture"
+        android:id="@+id/camTexture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
